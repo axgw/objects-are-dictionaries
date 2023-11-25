@@ -1,6 +1,7 @@
 import math
 
 
+# General
 def make(cls, *args):
     return cls["_new"](*args)
 
@@ -16,6 +17,19 @@ def find(cls, method_name):
             return cls[method_name]
         cls = cls["_parent"]
     raise NotImplementedError(f"Method '{method_name}' not found in class hierarchy.")
+
+
+def find_recursive(cls, method_name):
+    if method_name in cls:
+        return cls[method_name]
+    parent_cls = cls["_parent"]
+    if parent_cls is not None:
+        return find_recursive(parent_cls, method_name)
+    raise NotImplementedError(f"Method '{method_name}' not found in class hierarchy.")
+
+
+def instanceof(obj, class_type):
+    return obj["_class"] == class_type
 
 
 # Shape, parent
@@ -128,21 +142,10 @@ Circle = {
     # "_class-name": "Circle"
 }
 
-# examples = [square_new("sq", 3), circle_new("ci", 2)]
-# for shapes in examples:
-#     result = call(shapes, "larger", 10)
-#     print(f"is {shapes['name']} larger? {result}")
-
-
-# examples = [square_new("sq", 3), circle_new("ci", 2)]
-# for ex in examples:
-#     n = ex["name"]
-#     d = call(ex, "area")
-#     print(f"{n}: {d:.2f}")
-
 
 examples = [make(Square, "rc", 4), make(Circle, "ci", 2)]
 for ex in examples:
     n = ex["name"]
     d = call(ex, "density", weight=2)
     print(f"{n}: {d:.2f}")
+    print(instanceof(ex, Square))
