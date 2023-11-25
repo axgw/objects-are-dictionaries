@@ -12,11 +12,11 @@ def make(cls, *args):
 #     return method(shape, *args, **kwargs)
 
 
-# Modified for cache, wip
+# Modified call for cache
 def call(shape, method_name, *args, **kwargs):
     if method_name not in shape["_cache"]:
         method = find(shape["_class"], method_name)
-        shape["_class"][method_name] = method
+        shape["_cache"][method_name] = method
     else:
         method = shape["_cache"][method_name]
     return method(shape, *args, **kwargs)
@@ -60,7 +60,6 @@ Shape = {
     "density": shape_density,
     "_parent": None,
     "_new": shape_new
-    # _class-name: "Shape"
 }
 
 
@@ -92,7 +91,6 @@ Rectangle = {
     "larger": rectangle_larger,
     "_parent": Shape,
     "_new": rectangle_new
-    # "_class-name": "Rectangle"
 }
 
 
@@ -123,7 +121,6 @@ Square = {
     "larger": square_larger,
     "_parent": Rectangle,
     "_new": square_new
-    # "_class-name": "Square"
 }
 
 
@@ -154,16 +151,5 @@ Circle = {
     "larger": circle_larger,
     "_parent": Shape,
     "_new": circle_new
-    # "_class-name": "Circle"
 }
 
-
-examples = [make(Square, "rc", 4), make(Circle, "ci", 2)]
-for ex in examples:
-    n = ex["_cache"]
-    d = call(ex, "density", weight=2)
-    e = call(ex, "larger", 4)
-    r = ex["_cache"]
-    print(f"{n}: {d:.2f}")
-    print(instanceof(ex, Shape))
-    print(e, r)
